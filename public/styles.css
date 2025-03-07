@@ -1,20 +1,77 @@
+/* Estilo general */
 body {
     font-family: Arial, sans-serif;
+    background-image: url('/images/fondo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+}
+
+/* Centrar formularios */
+.container {
+    width: 100%;
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
     text-align: center;
-    margin: 20px;
 }
-form {
-    display: inline-block;
-    text-align: left;
+
+/* Estilo del logo */
+.logo {
+    width: 120px;
+    margin-bottom: 20px;
 }
-input {
-    display: block;
-    margin-bottom: 10px;
-}
-button {
+
+/* Estilo de inputs */
+input[type="text"],
+input[type="password"] {
+    width: 90%;
     padding: 10px;
-    background-color: blue;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Botón principal */
+button {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* Dashboard */
+.dashboard {
+    text-align: center;
+    color: white;
+    padding: 50px;
+}
+
+.dashboard h2 {
+    font-size: 24px;
+}
+
+.calculator-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.calculator-btn:hover {
+    background: #218838;
 }

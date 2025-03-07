@@ -1,108 +1,109 @@
 require("dotenv").config();
 const express = require("express");
-const mongoose = require("mongoose");
-const session = require("express-session");
-const bcrypt = require("bcrypt");
-const User = require("./models/User");
+const path = require("path");
 const mongoURI = 'mongodb+srv://rodrigomtz:BARCA6717@cluster0.stmrl.mongodb.net/';
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const session = require("express-session");
+const User = require("./models/User");
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Conectar a MongoDB
-mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("✅ Conectado a MongoDB"))
-  .catch((err) => console.error("❌ Error en la conexión a MongoDB:", err));
+// Configuración de EJS y Express
+app.set("view engine", "ejs");
+app.set("views", __dirname + "/views");
+app.use(express.urlencoded({ extended: true }));
+
+app.use(express.static(path.join(__dirname, "public")));
 
 // Configuración de sesiones
 app.use(
   session({
-    secret: process.env.SECRET_KEY,
-    resave: false,
-    saveUninitialized: false,
+      secret: process.env.SESSION_SECRET || "clave_por_defecto",
+      resave: false,
+      saveUninitialized: true,
   })
 );
 
-// Configurar EJS como motor de plantillas
-app.set("view engine", "ejs");
 
-// Middleware para parsear datos del formulario
-app.use(express.urlencoded({ extended: true }));
+// Conexión a MongoDB
+mongoose
+    .connect(process.env.MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => console.log("🟢 Conectado a MongoDB"))
+    .catch((err) => console.error("🔴 Error de conexión:", err));
 
-// Rutas
+// Ruta de inicio
 app.get("/", (req, res) => {
-  res.render("index");
+    res.render("index");
 });
 
 // Ruta para mostrar el formulario de registro
 app.get("/register", (req, res) => {
-  res.render("register");
+    res.render("register");
 });
 
-// Ruta para manejar el registro de usuarios
+// Ruta para registrar usuarios
 app.post("/register", async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    return res.send("Todos los campos son obligatorios");
-  }
-  
-  // Verificar si el usuario ya existe
-  const existingUser = await User.findOne({ username });
-  if (existingUser) {
-    return res.send("El usuario ya existe");
-  }
+    const { username, password } = req.body;
 
-  // Hashear la contraseña antes de guardarla
-  const hashedPassword = await bcrypt.hash(password, 10);
+    // Verificar si el usuario ya existe
+    const userExists = await User.findOne({ username });
+    if (userExists) {
+        return res.send("El usuario ya está registrado.");
+    }
 
-  // Guardar usuario en MongoDB
-  const newUser = new User({ username, password: hashedPassword });
-  await newUser.save();
+    // Hash de la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  res.redirect("/login");
+    // Guardar el usuario en la BD
+    const newUser = new User({ username, password: hashedPassword });
+    await newUser.save();
+
+    res.redirect("/login");
 });
 
 // Ruta para mostrar el formulario de login
 app.get("/login", (req, res) => {
-  res.render("login");
+    res.render("login");
 });
 
-// Ruta para manejar el inicio de sesión
+// Ruta para manejar el login
 app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
+    const { username, password } = req.body;
 
-  if (!user) {
-    return res.send("Usuario no encontrado");
-  }
+    const user = await User.findOne({ username });
+    if (!user) {
+        return res.send("Usuario no encontrado.");
+    }
 
-  // Comparar la contraseña ingresada con la almacenada
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    return res.send("Contraseña incorrecta");
-  }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        return res.send("Contraseña incorrecta.");
+    }
 
-  // Guardar usuario en sesión
-  req.session.user = user;
-  res.redirect("/dashboard");
+    req.session.user = user;
+    res.redirect("/dashboard");
 });
 
-// Ruta para el dashboard (solo si el usuario está autenticado)
+// Ruta protegida del dashboard
 app.get("/dashboard", (req, res) => {
-  if (!req.session.user) {
-    return res.redirect("/login");
-  }
-  res.render("dashboard", { user: req.session.user });
+    if (!req.session.user) {
+        return res.redirect("/login");
+    }
+    res.render("dashboard", { user: req.session.user });
 });
 
 // Ruta para cerrar sesión
 app.get("/logout", (req, res) => {
-  req.session.destroy(() => {
-    res.redirect("/");
-  });
+    req.session.destroy(() => {
+        res.redirect("/login");
+    });
 });
 
-// Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor en ejecución en http://localhost:${PORT}`);
-});
+// Iniciar servidor
+app.listen(PORT, () => console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`));
+
