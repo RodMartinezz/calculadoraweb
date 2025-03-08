@@ -37,9 +37,11 @@ mongoose
     .catch((err) => console.error("🔴 Error de conexión:", err));
 
 // Ruta de inicio
+// Ruta de inicio (AHORA redirige a login)
 app.get("/", (req, res) => {
-    res.render("index");
+    res.redirect("/login");
 });
+
 
 // Ruta para mostrar el formulario de registro
 app.get("/register", (req, res) => {
@@ -86,15 +88,15 @@ app.post("/login", async (req, res) => {
     }
 
     req.session.user = user;
-    res.redirect("/dashboard");
+    res.redirect("/paginaprincipal");
 });
 
 // Ruta protegida del dashboard
-app.get("/dashboard", (req, res) => {
+app.get("/paginaprincipal", (req, res) => {
     if (!req.session.user) {
         return res.redirect("/login");
     }
-    res.render("dashboard", { user: req.session.user });
+    res.render("paginaprincipal", { user: req.session.user });
 });
 
 // Ruta para cerrar sesión
