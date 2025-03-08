@@ -1,102 +1,224 @@
-/* Fondo de pantalla */
-body {
-    background: url('/images/fondo.jpg') no-repeat center center/cover;
-    font-family: Arial, sans-serif;
+/* ======= CONFIGURACIÓN GENERAL ======= */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-/* Navbar fijo */
+body {
+    background: url('/images/fondo.jpg') no-repeat center center/cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ======= NAVBAR ESTILO FACEBOOK ======= */
 .navbar {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #3b5998;
     padding: 15px 20px;
-    position: fixed;
     width: 100%;
+    position: fixed;
     top: 0;
     left: 0;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+/* LOGO PEQUEÑO (PARA TODAS LAS PÁGINAS EXCEPTO LOGIN Y REGISTER) */
 .logo img {
-    height: 40px;
+    width: 50px;
+    margin-right: 10px;
 }
 
-/* Navegación */
+.logo h1 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Enlaces de navegación */
 .nav-links a {
     color: white;
     text-decoration: none;
-    margin: 0 15px;
-    font-size: 16px;
     font-weight: bold;
+    margin: 0 15px;
+    transition: color 0.3s;
 }
 
 .nav-links a:hover {
-    text-decoration: underline;
+    color: #ffcc00;
 }
 
-/* Botón Calculadora */
+/* Botón de la calculadora */
 .calculator-btn {
     background: #ffcc00;
-    color: black;
-    padding: 8px 15px;
+    padding: 8px 12px;
     border-radius: 5px;
     text-decoration: none;
+    color: black;
     font-weight: bold;
+    transition: background 0.3s;
 }
 
 .calculator-btn:hover {
     background: #ffdb4d;
 }
 
-/* Botón Cerrar Sesión */
+/* Botón de cerrar sesión */
 .logout-btn {
-    background: #ff4d4d;
-    color: white;
-    padding: 8px 15px;
+    background: red;
+    padding: 8px 12px;
     border-radius: 5px;
     text-decoration: none;
+    color: white;
     font-weight: bold;
+    transition: background 0.3s;
 }
 
 .logout-btn:hover {
-    background: #f70e0e;
+    background: darkred;
 }
 
-/* Dashboard */
+/* ======= DASHBOARD ======= */
 .dashboard {
-    max-width: 900px;
-    margin: 100px auto;
     text-align: center;
-    color: rgb(0, 0, 0);
-    
+    padding: 120px 20px;
 }
 
-/* Secciones */
-.features {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
-
-.feature {
+/* Sección de Introducción */
+.intro {
+    margin-bottom: 40px;
     background: rgba(255, 255, 255, 0.2);
     padding: 20px;
     border-radius: 10px;
-    width: 30%;
+    backdrop-filter: blur(10px);
+}
+
+.intro h2 {
+    color: white;
+    font-size: 28px;
+}
+
+.intro p {
+    color: white;
+    font-size: 18px;
+}
+
+/* Secciones con información */
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.feature {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 20px;
+    border-radius: 10px;
     text-align: center;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
 }
 
 .feature img {
     width: 100%;
-    border-radius: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
 }
 
 .feature h3 {
+    color: white;
+    font-size: 22px;
+}
+
+.feature p {
+    color: white;
+    font-size: 16px;
+}
+
+/* ======= LOGIN Y REGISTRO ======= */
+.login-body, .register-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: url('/images/fondo.jpg') no-repeat center center/cover;
+}
+
+.login-container, .register-container {
+    background: rgba(255, 255, 255, 0.103);
+    padding: 30px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+    width: 300px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* LOGO GRANDE (SOLO PARA LOGIN Y REGISTER) */
+.login-container .logo img,
+.register-container .logo img {
+    width: 120px;
+}
+
+.login-container h2, .register-container h2 {
+    color: rgb(0, 0, 0);
+    margin-bottom: 20px;
+}
+
+.login-container label, .register-container label {
+    color: rgb(0, 0, 0);
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+}
+
+.login-container input, .register-container input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+button {
+    background: #ffcc00;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #ffdb4d;
+}
+
+.login-container p, .register-container p {
+    color: white;
+    margin-top: 10px;
+}
+
+.login-container a, .register-container a {
     color: #ffcc00;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.login-container a:hover, .register-container a:hover {
+    text-decoration: underline;
 }

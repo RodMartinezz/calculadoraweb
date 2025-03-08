@@ -3,21 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro</title>
+    <title>Registro - EasyCalculator</title>
     <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
+<body class="login-body">
 
-<div class="container">
-    <img src="/images/logo.png" alt="Logo" class="logo">
-    <h2>Registro</h2>
-    <form action="/register" method="POST">
-        <input type="text" name="username" placeholder="Usuario" required>
-        <input type="password" name="password" placeholder="Contraseña" required>
-        <button type="submit">Registrarse</button>
-    </form>
-    <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a></p>
-</div>
+    <div class="login-container">
+        <div class="logo">
+            <img src="/images/logo.png" alt="EasyCalculator Logo">
+        </div>
+        <h2>Registro</h2>
+        <form action="/register" method="POST">
+            <div class="input-group">
+                <label for="username">Correo:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="login-btn">Registrarse</button>
+        </form>
+        <p>¿Ya tienes una cuenta? <a href="/login">Inicia sesión aquí</a></p>
+    </div>
 
 </body>
 </html>
