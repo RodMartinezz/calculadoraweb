@@ -105,12 +105,12 @@ body {
 }
 
 .intro h2 {
-    color: white;
+    color: rgb(161, 18, 18);
     font-size: 28px;
 }
 
 .intro p {
-    color: white;
+    color: rgb(0, 0, 0);
     font-size: 18px;
 }
 
@@ -139,12 +139,12 @@ body {
 }
 
 .feature h3 {
-    color: white;
+    color: rgb(0, 24, 245);
     font-size: 22px;
 }
 
 .feature p {
-    color: white;
+    color: rgb(0, 0, 0);
     font-size: 16px;
 }
 
@@ -164,7 +164,7 @@ body {
     backdrop-filter: blur(10px);
     text-align: center;
     width: 300px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.233);
 }
 
 /* LOGO GRANDE (SOLO PARA LOGIN Y REGISTER) */
