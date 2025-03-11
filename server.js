@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
-const mongoURI = 'mongodb+srv://rodrigomtz:BARCA6717@cluster0.stmrl.mongodb.net/';
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
@@ -10,102 +9,55 @@ const User = require("./models/User");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuración de EJS y Express
+// Configuración
 app.set("view engine", "ejs");
-app.set("views", __dirname + "/views");
+app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
-
 app.use(express.static(path.join(__dirname, "public")));
 
-// Configuración de sesiones
 app.use(
   session({
-      secret: process.env.SESSION_SECRET || "clave_por_defecto",
-      resave: false,
-      saveUninitialized: true,
+    secret: process.env.SESSION_SECRET || "clave_por_defecto",
+    resave: false,
+    saveUninitialized: true,
   })
 );
 
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => console.log("🟢 Conectado a MongoDB"))
+  .catch(err => console.error("🔴 Error de conexión:", err));
 
-// Conexión a MongoDB
-mongoose
-    .connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .then(() => console.log("🟢 Conectado a MongoDB"))
-    .catch((err) => console.error("🔴 Error de conexión:", err));
-
-// Ruta de inicio
-// Ruta de inicio (AHORA redirige a login)
-app.get("/", (req, res) => {
-    res.redirect("/login");
-});
-
-
-// Ruta para mostrar el formulario de registro
-app.get("/register", (req, res) => {
-    res.render("register");
-});
-
-// Ruta para registrar usuarios
+// Rutas
+app.get("/", (req, res) => res.redirect("/login"));
+app.get("/register", (req, res) => res.render("register"));
 app.post("/register", async (req, res) => {
-    const { username, password } = req.body;
+  const { email, password, confirmPassword } = req.body;
+  if (password !== confirmPassword) return res.send("Las contraseñas no coinciden.");
 
-    // Verificar si el usuario ya existe
-    const userExists = await User.findOne({ username });
-    if (userExists) {
-        return res.send("El usuario ya está registrado.");
-    }
+  const emailExists = await User.findOne({ email });
+  if (emailExists) return res.send("Este correo ya está registrado.");
 
-    // Hash de la contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Guardar el usuario en la BD
-    const newUser = new User({ username, password: hashedPassword });
-    await newUser.save();
-
-    res.redirect("/login");
+  const hashedPassword = await bcrypt.hash(password, 10);
+  await new User({ email, password: hashedPassword }).save();
+  res.redirect("/login");
 });
 
-// Ruta para mostrar el formulario de login
-app.get("/login", (req, res) => {
-    res.render("login");
-});
-
-// Ruta para manejar el login
+app.get("/login", (req, res) => res.render("login"));
 app.post("/login", async (req, res) => {
-    const { username, password } = req.body;
-
-    const user = await User.findOne({ username });
-    if (!user) {
-        return res.send("Usuario no encontrado.");
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-        return res.send("Contraseña incorrecta.");
-    }
-
-    req.session.user = user;
-    res.redirect("/paginaprincipal");
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user || !await bcrypt.compare(password, user.password)) return res.send("Credenciales incorrectas.");
+  req.session.user = { id: user._id, email: user.email };
+  res.redirect("/paginaprincipal");
 });
 
-// Ruta protegida del dashboard
 app.get("/paginaprincipal", (req, res) => {
-    if (!req.session.user) {
-        return res.redirect("/login");
-    }
-    res.render("paginaprincipal", { user: req.session.user });
+  if (!req.session.user) return res.redirect("/login");
+  res.render("paginaprincipal", { user: req.session.user });
 });
 
-// Ruta para cerrar sesión
-app.get("/logout", (req, res) => {
-    req.session.destroy(() => {
-        res.redirect("/login");
-    });
-});
+app.get("/logout", (req, res) => req.session.destroy(() => res.redirect("/login")));
 
-// Iniciar servidor
-app.listen(PORT, () => console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`));
-
+app.listen(PORT, () => console.log(`🚀 Servidor en http://localhost:${PORT}`));
