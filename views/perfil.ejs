@@ -1,0 +1,38 @@
+<!-- perfil.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - EasyCalculator</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="main-body">
+
+    <header class="navbar">
+        <div class="logo">
+            <img src="/images/logo.png" alt="EasyCalculator Logo">
+            <h1>EasyCalculator</h1>
+        </div>
+        <nav class="nav-links">
+            <a href="/paginaprincipal">Inicio</a>
+            <a href="/perfil">Perfil</a>
+            <a href="/historial">Historial</a>
+            <a href="/sugerencias">Sugerencias</a>
+            <a href="/calculadora" class="calculator-btn">Calculadora</a>
+        </nav>
+        <a href="/logout" class="logout-btn">Cerrar Sesión</a>
+    </header>
+
+    <div class="container">
+        <h2>Perfil del Usuario</h2>
+        <div class="profile-section">
+            <img src="/images/user.png" alt="Foto de perfil" class="profile-pic">
+            <p><strong>Nombre:</strong> <%= user.nombre %></p>
+            <p><strong>Asociación/Escuela:</strong> <%= user.institucion %></p>
+            <p><strong>Fecha de Nacimiento:</strong> <%= user.fechaNacimiento %></p>
+            <p><strong>Correo:</strong> <%= user.email %></p>
+        </div>
+    </div>
+</body>
+</html>
