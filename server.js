@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const User = require("./models/User");
+const Sugerencia = require("./models/Sugerencia");
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -40,6 +42,27 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // Página de inicio redirige a Login
 app.get("/", (req, res) => res.redirect("/login"));
+
+// Donde guarda los datos de Sugerencias /// 
+app.post("/sugerencias", async (req, res) => {
+  const { email, opinion, gusta } = req.body;
+  
+  const nuevaSugerencia = new Sugerencia({
+      email,
+      opinion,
+      gusta: gusta === "Sí" // Convierte el checkbox en booleano
+  });
+
+  await nuevaSugerencia.save();
+  res.redirect("/sugerencias"); // Redirige de nuevo a la página de sugerencias
+});
+
+
+
+app.get("/sugerencias", async (req, res) => {
+    const sugerencias = await Sugerencia.find().sort({ fecha: -1 }); // Ordenar por fecha descendente
+    res.render("sugerencias", { sugerencias });
+});
 
 // =============================
 // Rutas de Autenticación

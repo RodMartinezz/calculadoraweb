@@ -42,5 +42,22 @@
         </form>
     </div>
 
+    <section class="comentarios">
+    <h2>Comentarios anteriores</h2>
+    <% if (sugerencias.length > 0) { %>
+        <% sugerencias.forEach(sugerencia => { %>
+            <div class="comentario">
+                <p><strong><%= sugerencia.email %></strong></p>
+                <p><%= sugerencia.opinion %></p>
+                <p>¿Le gustó el sitio web? <%= sugerencia.gusta ? "Sí" : "No" %></p>
+                <hr>
+            </div>
+        <% }) %>
+    <% } else { %>
+        <p>No hay comentarios aún.</p>
+    <% } %>
+</section>
+
+
 </body>
 </html>
