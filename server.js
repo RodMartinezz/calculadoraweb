@@ -48,25 +48,16 @@ app.get("/", (req, res) => res.redirect("/login"));
 app.get("/register", (req, res) => res.render("register"));
 app.post("/register", async (req, res) => {
   const { email, password, confirmPassword } = req.body;
-
-  if (!email || !password || !confirmPassword) {
-    return res.send("Todos los campos son obligatorios.");
-  }
-
-  if (password !== confirmPassword) {
-    return res.send("Las contraseñas no coinciden.");
-  }
+  if (password !== confirmPassword) return res.send("Las contraseñas no coinciden.");
 
   const emailExists = await User.findOne({ email });
-  if (emailExists) {
-    return res.send("Este correo ya está registrado.");
-  }
+  if (emailExists) return res.send("Este correo ya está registrado.");
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  await new User({ email, password: hashedPassword }).save();
-
+  await new User({ email, password: hashedPassword }).save();  // Cambié 'username' por 'email'
   res.redirect("/login");
 });
+
 
 // Login de usuarios
 app.get("/login", (req, res) => res.render("login"));
