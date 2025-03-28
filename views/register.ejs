@@ -13,6 +13,12 @@
             <img src="/images/logo.png" alt="EasyCalculator Logo">
         </div>
         <h2>Registro</h2>
+        
+        <!-- Mensaje de error -->
+        <% if (error) { %>
+            <p class="error-message"><%= error %></p>
+        <% } %>
+
         <form action="/register" method="POST">
             <div class="input-group">
                 <label for="email">Correo:</label>

@@ -171,11 +171,11 @@ body {
 
 
 .container {
-    max-width: 400px; /* Ancho del cuadro */
-    margin: 100px auto; /* Centra vertical y horizontalmente */
+    max-width: 10px; /* Ancho del cuadro */
+    margin: 50px auto; /* Centra vertical y horizontalmente */
     background-color: #ffffff; /* Fondo blanco para destacar el cuadro */
     padding: 30px;
-    border-radius: 15px; /* Bordes redondeados */
+    border-radius: 30px; /* Bordes redondeados */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra suave */
     text-align: center;
 }
@@ -187,11 +187,11 @@ body {
 .container form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 }
 
 .container textarea {
-    resize: none; /* Evita que se expanda el área de texto */
+    resize: none; 
 }
 
 /* LOGO GRANDE (SOLO PARA LOGIN Y REGISTER) */
@@ -338,3 +338,12 @@ hr {
     background: #ddd;
     margin-top: 10px;
 }
+
+
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+

@@ -7,7 +7,6 @@ const session = require("express-session");
 const User = require("./models/User");
 const Sugerencia = require("./models/Sugerencia");
 
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -43,53 +42,58 @@ mongoose.connect(process.env.MONGO_URI, {
 // Página de inicio redirige a Login
 app.get("/", (req, res) => res.redirect("/login"));
 
-// Donde guarda los datos de Sugerencias /// 
+// Donde guarda los datos de Sugerencias
 app.post("/sugerencias", async (req, res) => {
   const { email, opinion, gusta } = req.body;
   
   const nuevaSugerencia = new Sugerencia({
-      email,
-      opinion,
-      gusta: gusta === "Sí" // Convierte el checkbox en booleano
+    email,
+    opinion,
+    gusta: gusta === "Sí"
   });
 
   await nuevaSugerencia.save();
-  res.redirect("/sugerencias"); // Redirige de nuevo a la página de sugerencias
+  res.redirect("/sugerencias");
 });
 
-
-
 app.get("/sugerencias", async (req, res) => {
-    const sugerencias = await Sugerencia.find().sort({ fecha: -1 }); // Ordenar por fecha descendente
-    res.render("sugerencias", { sugerencias });
+  const sugerencias = await Sugerencia.find().sort({ fecha: -1 });
+  res.render("sugerencias", { sugerencias });
 });
 
 // =============================
 // Rutas de Autenticación
 // =============================
 // Registro de usuarios
-app.get("/register", (req, res) => res.render("register"));
+app.get("/register", (req, res) => res.render("register", { error: null }));
 app.post("/register", async (req, res) => {
   const { email, password, confirmPassword } = req.body;
-  if (password !== confirmPassword) return res.send("Las contraseñas no coinciden.");
+  
+  // Verificar si las contraseñas coinciden
+  if (password !== confirmPassword) {
+    return res.render("register", { error: "Las contraseñas no coinciden." });
+  }
 
+  // Verificar si el correo ya está registrado
   const emailExists = await User.findOne({ email });
-  if (emailExists) return res.send("Este correo ya está registrado.");
+  if (emailExists) {
+    return res.render("register", { error: "Este correo ya está registrado." });
+  }
 
+  // Crear un nuevo usuario con la contraseña encriptada
   const hashedPassword = await bcrypt.hash(password, 10);
-  await new User({ email, password: hashedPassword }).save();  // Cambié 'username' por 'email'
+  await new User({ email, password: hashedPassword }).save();
   res.redirect("/login");
 });
 
-
 // Login de usuarios
-app.get("/login", (req, res) => res.render("login"));
+app.get("/login", (req, res) => res.render("login", { error: null }));
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
-  if (!user || !await bcrypt.compare(password, user.password)) {
-    return res.send("Credenciales incorrectas.");
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return res.render("login", { error: "Credenciales incorrectas." });
   }
 
   req.session.user = { id: user._id, email: user.email };
