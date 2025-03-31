@@ -89,6 +89,14 @@ body {
     background: darkred;
 }
 
+
+/* ======= Calculadora page ======= */
+.calculadoravisual {
+    text-align: center;
+    padding: 5cm;
+}
+
+
 /* ======= DASHBOARD ======= */
 .dashboard {
     text-align: center;

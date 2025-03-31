@@ -4,6 +4,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
+const { exec } = require("child_process");
 const User = require("./models/User");
 const Sugerencia = require("./models/Sugerencia");
 
@@ -69,18 +70,15 @@ app.get("/register", (req, res) => res.render("register", { error: null }));
 app.post("/register", async (req, res) => {
   const { email, password, confirmPassword } = req.body;
   
-  // Verificar si las contraseñas coinciden
   if (password !== confirmPassword) {
     return res.render("register", { error: "Las contraseñas no coinciden." });
   }
 
-  // Verificar si el correo ya está registrado
   const emailExists = await User.findOne({ email });
   if (emailExists) {
     return res.render("register", { error: "Este correo ya está registrado." });
   }
 
-  // Crear un nuevo usuario con la contraseña encriptada
   const hashedPassword = await bcrypt.hash(password, 10);
   await new User({ email, password: hashedPassword }).save();
   res.redirect("/login");
@@ -135,6 +133,20 @@ app.get("/sugerencias", (req, res) => {
 app.get("/calculadora", (req, res) => {
   if (!req.session.user) return res.redirect("/login");
   res.render("calculadora", { user: req.session.user });
+});
+
+// =============================
+// Ruta para la calculadora en Java
+// =============================
+app.get("/calcular", (req, res) => {
+  exec("java calculadora.java", (error, stdout, stderr) => {
+    if (error) {
+      console.error(`🔴 Error al ejecutar la calculadora: ${stderr}`);
+      res.status(500).send("Error al ejecutar la calculadora");
+      return;
+    }
+    res.send(stdout);
+  });
 });
 
 // =============================
