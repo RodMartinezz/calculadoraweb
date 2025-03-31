@@ -1,63 +1,211 @@
-<!-- sugerencias.ejs -->
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Sugerencias - EasyCalculator</title>
-    <link rel="stylesheet" href="/styles.css">
-</head>
-<body class="main-body">
-
-    <header class="navbar">
-        <div class="logo">
-            <img src="/images/logo.png" alt="EasyCalculator Logo">
-            <h1>EasyCalculator</h1>
-        </div>
-        <nav class="nav-links">
-            <a href="/paginaprincipal">Inicio</a>
-            <a href="/perfil">Perfil</a>
-            <a href="/historial">Historial</a>
-            <a href="/sugerencias">Sugerencias</a>
-            <a href="/calculadora" class="calculator-btn">Calculadora</a>
-        </nav>
-        <a href="/logout" class="logout-btn">Cerrar Sesión</a>
-    </header>
-
-    <section class="features">
-        <div class="feature">
-    <div class="container">
-        <h2>Envíanos tu opinión</h2>
-        <form action="/sugerencias" method="POST">
-            <label for="email">Correo:</label>
-            <input type="email" id="email" name="email" required>
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Sugerencias - EasyCalculator</title>
+        <link rel="stylesheet" href="/styles.css">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <style>
+            /* Estilos solo para la sección de sugerencias */
+            .sugerencias-container {
+                max-width: 1200px;
+                margin: 2rem auto;
+                padding: 0 20px;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
             
-            <label for="opinion">Tu opinión:</label>
-            <textarea id="opinion" name="opinion" rows="4" required></textarea>
+            @media (min-width: 992px) {
+                .sugerencias-container {
+                    grid-template-columns: 1fr 1fr;
+                }
+            }
+            
+            .feedback-section, .comentarios-section {
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                padding: 25px;
+            }
+            
+            .feedback-section h2, .comentarios-section h2 {
+                color: #4361ee;
+                margin-bottom: 15px;
+                font-size: 1.5rem;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .feedback-section h2 i, .comentarios-section h2 i {
+                font-size: 1.3rem;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 500;
+                color: #333;
+            }
+            
+            .form-group input,
+            .form-group textarea {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-family: 'Roboto', sans-serif;
+            }
+            
+            .form-group textarea {
+                min-height: 120px;
+                resize: vertical;
+            }
+            
+            .like-options {
+                margin: 20px 0;
+            }
+            
+            .like-options p {
+                margin-bottom: 10px;
+                font-weight: 500;
+            }
+            
+            .like-option {
+                display: inline-block;
+                margin-right: 15px;
+            }
+            
+            .like-option input {
+                margin-right: 5px;
+            }
+            
+            .submit-btn {
+                background-color: #4361ee;
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: 500;
+                width: 100%;
+                transition: background-color 0.3s;
+            }
+            
+            .submit-btn:hover {
+                background-color: #3a56d4;
+            }
+            
+            .comentario {
+                padding: 15px 0;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .comentario:last-child {
+                border-bottom: none;
+            }
+            
+            .comentario p {
+                margin: 5px 0;
+            }
+            
+            .comentario p:first-child {
+                font-weight: 500;
+                color: #333;
+            }
+            
+            .comentario p:nth-child(3) {
+                color: #666;
+                font-size: 0.9rem;
+            }
+            
+            .no-comments {
+                text-align: center;
+                padding: 30px 0;
+                color: #777;
+            }
+            
+            .no-comments i {
+                font-size: 2rem;
+                margin-bottom: 10px;
+                display: block;
+                color: #ddd;
+            }
+        </style>
+    </head>
+    <body class="main-body">
 
-            <label>
-                <input type="checkbox" name="gusta" value="Sí"> ¿Te gustó el sitio web?
-            </label>
-
-            <button type="submit">Enviar</button>
-        </form>
-    </div>
-
-    <section class="comentarios">
-    <h2>Comentarios anteriores</h2>
-    <% if (sugerencias.length > 0) { %>
-        <% sugerencias.forEach(sugerencia => { %>
-            <div class="comentario">
-                <p><strong><%= sugerencia.email %></strong></p>
-                <p><%= sugerencia.opinion %></p>
-                <p>¿Le gustó el sitio web? <%= sugerencia.gusta ? "Sí" : "No" %></p>
-                <hr>
+        <!-- Barra de navegación original sin cambios -->
+        <header class="navbar">
+            <div class="logo">
+                <img src="/images/logo.png" alt="EasyCalculator Logo">
+                <h1>EasyCalculator</h1>
             </div>
-        <% }) %>
-    <% } else { %>
-        <p>No hay comentarios aún.</p>
-    <% } %>
-</section>
+            <nav class="nav-links">
+                <a href="/paginaprincipal">Inicio</a>
+                <a href="/perfil">Perfil</a>
+                <a href="/historial">Historial</a>
+                <a href="/sugerencias">Sugerencias</a>
+                <a href="/calculadora" class="calculator-btn">Calculadora</a>
+            </nav>
+            <a href="/logout" class="logout-btn">Cerrar Sesión</a>
+        </header>
 
+        <div class="sugerencias-container">
+            
+            <section class="feedback-section">
+                <h2><i class="fas fa-envelope"></i> Envíanos tu opinión</h2>
+                <form action="/sugerencias" method="POST">
+                    <div class="form-group">
+                        <label for="email">Correo electrónico:</label>
+                        <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="opinion">Tu opinión:</label>
+                        <textarea id="opinion" name="opinion" placeholder="Escribe aquí tus sugerencias, comentarios o ideas..." required></textarea>
+                    </div>
 
-</body>
-</html>
+                    <div class="like-options">
+                        <p>¿Te gustó el sitio web?</p>
+                        <label class="like-option">
+                            <input type="radio" name="gusta" value="Sí" checked> Sí
+                        </label>
+                        <label class="like-option">
+                            <input type="radio" name="gusta" value="No"> No
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Enviar sugerencia
+                    </button>
+                </form>
+            </section>
+
+            <section class="comentarios-section">
+                <h2><i class="fas fa-comments"></i> Comentarios anteriores</h2>
+                <% if (sugerencias.length > 0) { %>
+                    <% sugerencias.forEach(sugerencia => { %>
+                        <div class="comentario">
+                            <p><strong><%= sugerencia.email %></strong></p>
+                            <p><%= sugerencia.opinion %></p>
+                            <p>¿Le gustó el sitio web? <%= sugerencia.gusta ? "Sí" : "No" %></p>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="no-comments">
+                        <i class="fas fa-comment-slash"></i>
+                        <p>No hay comentarios aún. ¡Sé el primero en opinar!</p>
+                    </div>
+                <% } %>
+            </section>
+        </div>
+
+    </body>
+    </html>
