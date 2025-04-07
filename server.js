@@ -18,6 +18,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use('/calculadora', express.static(path.join(__dirname, 'easycalculator-web')));
 
 app.use(
   session({
@@ -35,6 +36,14 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
 }).then(() => console.log("🟢 Conectado a MongoDB"))
   .catch(err => console.error("🔴 Error de conexión:", err));
+
+// =============================
+// Middleware de autenticación
+// =============================
+const requireAuth = (req, res, next) => {
+  if (!req.session.user) return res.redirect("/login");
+  next();
+};
 
 // =============================
 // Rutas para el sistema
@@ -59,7 +68,7 @@ app.post("/sugerencias", async (req, res) => {
 
 app.get("/sugerencias", async (req, res) => {
   const sugerencias = await Sugerencia.find().sort({ fecha: -1 });
-  res.render("sugerencias", { sugerencias });
+  res.render("sugerencias", { sugerencias, user: req.session.user });
 });
 
 // =============================
@@ -99,53 +108,56 @@ app.post("/login", async (req, res) => {
 });
 
 // Cerrar sesión
-app.get("/logout", (req, res) => req.session.destroy(() => res.redirect("/login")));
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/login");
+});
 
 // =============================
 // Rutas para las páginas
 // =============================
 
 // Página principal
-app.get("/paginaprincipal", (req, res) => {
-  if (!req.session.user) return res.redirect("/login");
+app.get("/paginaprincipal", requireAuth, (req, res) => {
   res.render("paginaprincipal", { user: req.session.user });
 });
 
 // Perfil
-app.get("/perfil", (req, res) => {
-  if (!req.session.user) return res.redirect("/login");
+app.get("/perfil", requireAuth, (req, res) => {
   res.render("perfil", { user: req.session.user });
 });
 
 // Historial
-app.get("/historial", (req, res) => {
-  if (!req.session.user) return res.redirect("/login");
+app.get("/historial", requireAuth, (req, res) => {
   res.render("historial", { user: req.session.user });
 });
 
 // Sugerencias (Configuración)
-app.get("/sugerencias", (req, res) => {
-  if (!req.session.user) return res.redirect("/login");
+app.get("/sugerencias", requireAuth, (req, res) => {
   res.render("sugerencias", { user: req.session.user });
 });
 
-// Calculadora
-app.get("/calculadora", (req, res) => {
-  if (!req.session.user) return res.redirect("/login");
-  res.render("calculadora", { user: req.session.user });
+// =============================
+// Calculadora Web
+// =============================
+app.get("/calculadora", requireAuth, (req, res) => {
+  // Opción 1: Servir directamente el archivo HTML
+  res.sendFile(path.join(__dirname, 'easycalculator-web', 'index.html'));
+  
+  // Opción 2: O usar una vista EJS que envuelva la calculadora
+  // res.render('calculadora', { user: req.session.user });
 });
 
 // =============================
-// Ruta para la calculadora en Java
+// Ruta para la calculadora en Java (opcional)
 // =============================
-app.get("/calcular", (req, res) => {
+app.get("/calcular", requireAuth, (req, res) => {
   exec("java calculadora.java", (error, stdout, stderr) => {
     if (error) {
       console.error(`🔴 Error al ejecutar la calculadora: ${stderr}`);
-      res.status(500).send("Error al ejecutar la calculadora");
-      return;
+      return res.status(500).json({ error: "Error al ejecutar la calculadora" });
     }
-    res.send(stdout);
+    res.json({ result: stdout });
   });
 });
 

@@ -3,90 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - EasyCalculator</title>
-    <link rel="stylesheet" href="/styles.css">
-    <style>
-        /* Mejora visual del botón */
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 25px;
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
-            border: none;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(41, 40, 40, 0.1);
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        button:active {
-            background-color: #397d3b;
-            transform: translateY(1px);
-        }
-
-        /* Cambiar el color del texto del h1 */
-        h1 {
-            color: white;
-        }
-    </style>
+    <title>Calculadora</title>
+    <link rel="stylesheet" href="/easycalculator-web/style.css">
 </head>
-<body class="main-body">
-
-    <!-- Navbar estilo Facebook -->
-    <header class="navbar">
-        <div class="logo">
-            <img src="/images/logo.png" alt="EasyCalculator Logo">
-            <h1>EasyCalculator</h1>
-        </div>
-        <nav class="nav-links">
-            <a href="/paginaprincipal">Inicio</a>
-            <a href="/perfil">Perfil</a>
-            <a href="/historial">Historial</a>
-            <a href="/sugerencias">Sugerencias</a>
-            <a href="/calculadora" class="calculator-btn">Calculadora</a>
-        </nav>
-        <a href="/logout" class="logout-btn">Cerrar Sesión</a>
-    </header>
-
-    <!-- Contenedor Principal -->
-    <main class="calculadoravisual">
-        <section class="intro">
-            <h2>¿Cómo correr la calculadora?</h2>
-            <p>Es sencillo, simplemente sigue estos pasos:</p>
-            <ul>
-                <li>Descargar Node.js</li>
-                <li>Descargar Java Development Kit (JDK)</li>
-                <li>Agregar el JDK al PATH</li>
-            </ul>
-            <img src="/images/calculador.jpg" alt="Gráficos">
-        </section>
-
-        <!-- Calculadora Científica -->
-        <h1>Calculadora Científica</h1>
-        <button onclick="calcular()">Calcular</button>
-        <div id="resultado"></div>
-
-        <script>
-            function calcular() {
-                fetch('/calcular')
-                    .then(response => response.text())
-                    .then(data => {
-                        document.getElementById('resultado').innerText = data;
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                    });
-            }
-        </script>
-    </main>
-
+<body>
+    <%- include('partials/header') %>
+    
+    <div class="container">
+        <!-- Incrusta tu calculadora -->
+        <iframe src="/easycalculator-web/index.html" frameborder="0" style="width:100%; height:80vh;"></iframe>
+        
+        <!-- O incluye directamente el contenido -->
+        <!--
+        <%- include('../easycalculator-web/index.html') %>
+        -->
+    </div>
+    
+    <%- include('partials/footer') %>
 </body>
 </html>

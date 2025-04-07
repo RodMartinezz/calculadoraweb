@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Científica</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.7.0/math.min.js"></script>
+</head>
+<body>
+    <!-- Botón de regreso al inicio -->
+    <a href="/paginaprincipal" class="home-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        Inicio
+    </a>
+
+    <div class="container">
+        <div class="calculator">
+            <input type="text" id="display" disabled>
+            
+            <div class="buttons">
+                <!-- Fila 1 -->
+                <button class="btn-number">7</button>
+                <button class="btn-number">8</button>
+                <button class="btn-number">9</button>
+                <button class="btn-operator">+</button>
+                <button class="btn-function">cos</button>
+                <button class="btn-operator">^</button>
+                <button class="btn-clear">C</button>
+                
+                <!-- Fila 2 -->
+                <button class="btn-number">4</button>
+                <button class="btn-number">5</button>
+                <button class="btn-number">6</button>
+                <button class="btn-operator">-</button>
+                <button class="btn-function">sin</button>
+                <button class="btn-parenthesis">(</button>
+                <button class="btn-special">±</button>
+                
+                <!-- Fila 3 -->
+                <button class="btn-number">1</button>
+                <button class="btn-number">2</button>
+                <button class="btn-number">3</button>
+                <button class="btn-operator">*</button>
+                <button class="btn-function">tan</button>
+                <button class="btn-parenthesis">)</button>
+                <button class="btn-advanced">∫</button>
+                
+                <!-- Fila 4 -->
+                <button class="btn-equals">=</button>
+                <button class="btn-number">0</button>
+                <button class="btn-number">.</button>
+                <button class="btn-operator">/</button>
+                <button class="btn-variable">x</button>
+                <button class="btn-advanced">se</button>
+                <button class="btn-advanced">dx</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diálogos modales -->
+    <div id="integral-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Cálculo de Integral</h3>
+            <input type="text" id="integral-function" placeholder="Función (ej: 2*x^2)">
+            <input type="number" id="integral-a" placeholder="Límite inferior">
+            <input type="number" id="integral-b" placeholder="Límite superior">
+            <button id="calculate-integral">Calcular</button>
+        </div>
+    </div>
+
+    <div id="derivative-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Cálculo de Derivada</h3>
+            <select id="derivative-option">
+                <option value="1">Función personalizada</option>
+                <option value="2">f(x) = sin(x)</option>
+                <option value="3">f(x) = cos(x)</option>
+                <option value="4">f(x) = exp(x)</option>
+            </select>
+            <input type="text" id="derivative-function" placeholder="Función (ej: 2*x^2 + 3*x + 1)">
+            <input type="number" id="derivative-x" placeholder="Valor de x">
+            <button id="calculate-derivative">Calcular</button>
+        </div>
+    </div>
+
+    <div id="equations-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Sistema de Ecuaciones</h3>
+            <input type="number" id="equations-count" placeholder="Número de ecuaciones">
+            <div id="equations-inputs"></div>
+            <button id="calculate-equations">Resolver</button>
+        </div>
+    </div>
+
+    <script src="math-parser.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
