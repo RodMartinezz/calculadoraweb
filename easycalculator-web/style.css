@@ -1,6 +1,14 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
+    /* Imagen de fondo */
+    background-image: url('./images/fondo.jpg'); /* Ajusta la ruta según tu estructura */
+    background-size: cover;        /* Cubre toda la pantalla */
+    background-position: center;  /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que se repita */
+    background-attachment: fixed; /* Fondo fijo al hacer scroll */
+    /* Opcional: Capa oscura semitransparente para mejorar legibilidad */
+    background-blend-mode: overlay;
+    background-color: rgba(2, 0, 95, 0.7); /* Color + transparencia */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,12 +17,14 @@ body {
     padding: 20px;
 }
 
+
+
 .calculator-container {
     display: flex;
     gap: 20px;
     width: 100%;
     max-width: 900px;
-    background-color: #fff;
+    background-color: #2b2828;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -26,7 +36,7 @@ body {
 }
 
 .calculator {
-    background-color: #fff;
+    background-color: #01495f;
     border-radius: 8px;
     padding: 20px;
 }
